@@ -1,0 +1,15 @@
+[package]
+name = "mimir-schema"
+description = "GraphQL schema introspection, parsing, and type graph representation"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+serde = { workspace = true }
+serde_json = { workspace = true }
+thiserror = { workspace = true }
+indexmap = { workspace = true }
+
+[dev-dependencies]
+proptest = { workspace = true }

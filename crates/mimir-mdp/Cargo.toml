@@ -1,0 +1,14 @@
+[package]
+name = "mimir-mdp"
+description = "MDP-based exploration strategies for GraphQL mutation discovery — UCB1, Thompson sampling"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+mimir-schema = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+
+[dev-dependencies]
+proptest = { workspace = true }

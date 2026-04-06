@@ -1,0 +1,13 @@
+[package]
+name = "mimir-markov"
+description = "Markov chain steady-state analysis — long-run state probabilities for API security"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+serde = { workspace = true }
+serde_json = { workspace = true }
+
+[dev-dependencies]
+proptest = { workspace = true }

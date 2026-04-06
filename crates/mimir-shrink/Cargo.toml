@@ -1,0 +1,14 @@
+[package]
+name = "mimir-shrink"
+description = "Hughes-style stateful shrinking — minimize attack sequences to minimal reproductions"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+serde = { workspace = true }
+serde_json = { workspace = true }
+tracing = { workspace = true }
+
+[dev-dependencies]
+proptest = { workspace = true }

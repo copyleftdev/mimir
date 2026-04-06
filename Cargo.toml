@@ -1,0 +1,79 @@
+[workspace]
+resolver = "3"
+members = [
+    "crates/mimir-schema",
+    "crates/mimir-graph",
+    "crates/mimir-gen",
+    "crates/mimir-mdp",
+    "crates/mimir-entropy",
+    "crates/mimir-oracle",
+    "crates/mimir-dst",
+    "crates/mimir-transport",
+    "crates/mimir-report",
+    "crates/mimir-cli",
+    "crates/mimir-wald",
+    "crates/mimir-shrink",
+    "crates/mimir-fisher",
+    "crates/mimir-lamport",
+    "crates/mimir-markov",
+    "crates/mimir-bayes",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+license = "MIT"
+repository = "https://github.com/copyleftdev/mimir"
+authors = ["copyleftdev"]
+
+[workspace.dependencies]
+# Internal
+mimir-schema = { path = "crates/mimir-schema" }
+mimir-graph = { path = "crates/mimir-graph" }
+mimir-gen = { path = "crates/mimir-gen" }
+mimir-mdp = { path = "crates/mimir-mdp" }
+mimir-entropy = { path = "crates/mimir-entropy" }
+mimir-oracle = { path = "crates/mimir-oracle" }
+mimir-dst = { path = "crates/mimir-dst" }
+mimir-transport = { path = "crates/mimir-transport" }
+mimir-report = { path = "crates/mimir-report" }
+mimir-wald = { path = "crates/mimir-wald" }
+mimir-shrink = { path = "crates/mimir-shrink" }
+mimir-fisher = { path = "crates/mimir-fisher" }
+mimir-lamport = { path = "crates/mimir-lamport" }
+mimir-markov = { path = "crates/mimir-markov" }
+mimir-bayes = { path = "crates/mimir-bayes" }
+
+# Async
+tokio = { version = "1", features = ["full"] }
+
+# HTTP
+reqwest = { version = "0.12", features = ["json", "rustls-tls"], default-features = false }
+
+# Serialization
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+# CLI
+clap = { version = "4", features = ["derive"] }
+
+# Error handling
+thiserror = "2"
+anyhow = "1"
+
+# Observability
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+# Hashing / compression (for NCD)
+sha2 = "0.10"
+flate2 = "1"
+
+# Collections
+indexmap = { version = "2", features = ["serde"] }
+
+# Time
+chrono = { version = "0.4", features = ["serde"] }
+
+# Testing
+proptest = "1"

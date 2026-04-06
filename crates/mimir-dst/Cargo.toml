@@ -1,0 +1,23 @@
+[package]
+name = "mimir-dst"
+description = "Deterministic simulation testing engine for GraphQL security exploration"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+mimir-schema = { workspace = true }
+mimir-gen = { workspace = true }
+mimir-mdp = { workspace = true }
+mimir-oracle = { workspace = true }
+mimir-entropy = { workspace = true }
+mimir-transport = { workspace = true }
+mimir-report = { workspace = true }
+mimir-graph = { workspace = true }
+indexmap = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+tracing = { workspace = true }
+chrono = { workspace = true }
+tokio = { workspace = true }
+thiserror = { workspace = true }

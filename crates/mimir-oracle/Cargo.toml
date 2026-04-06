@@ -1,0 +1,17 @@
+[package]
+name = "mimir-oracle"
+description = "Security invariant checker for GraphQL — LTL properties and violation detection"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+mimir-schema = { workspace = true }
+mimir-entropy = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+thiserror = { workspace = true }
+chrono = { workspace = true }
+
+[dev-dependencies]
+proptest = { workspace = true }

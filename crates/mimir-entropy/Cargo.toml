@@ -1,0 +1,14 @@
+[package]
+name = "mimir-entropy"
+description = "Information theory analysis for GraphQL responses — Shannon entropy, NCD, differential analysis"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+serde = { workspace = true }
+serde_json = { workspace = true }
+flate2 = { workspace = true }
+
+[dev-dependencies]
+proptest = { workspace = true }
