@@ -205,13 +205,15 @@ impl RaceDetector {
                 let a_name_lower = a.operation_name.to_lowercase();
                 let b_name_lower = b.operation_name.to_lowercase();
 
-                let check_words = ["get", "check", "verify", "validate", "fetch", "read", "load"];
+                let check_words = [
+                    "get", "check", "verify", "validate", "fetch", "read", "load",
+                ];
                 // State-setting words: operations that establish state
                 let setup_words = ["set", "create", "write", "modify"];
                 // Finalizing words: operations that act on previously established state
                 let finalize_words = [
-                    "submit", "transfer", "send", "delete", "remove", "confirm",
-                    "approve", "finalize", "complete",
+                    "submit", "transfer", "send", "delete", "remove", "confirm", "approve",
+                    "finalize", "complete",
                 ];
                 let act_words = [
                     "set", "submit", "create", "update", "delete", "remove", "write", "modify",

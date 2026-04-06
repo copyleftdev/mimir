@@ -12,10 +12,7 @@ impl ShrinkResultExt for ShrinkResult {
 
         guide.push_str("=== Minimal Reproduction Guide ===\n\n");
 
-        guide.push_str(&format!(
-            "Finding: {}\n",
-            self.shrunk_sequence.finding_id
-        ));
+        guide.push_str(&format!("Finding: {}\n", self.shrunk_sequence.finding_id));
         guide.push_str(&format!(
             "Original sequence length: {}\n",
             self.original_length

@@ -103,11 +103,7 @@ pub fn propagate(network: &mut BayesNetwork) {
 pub fn compound_risk(network: &BayesNetwork, vuln_ids: &[&str]) -> f64 {
     let mut risk = 1.0;
     for id in vuln_ids {
-        let posterior = network
-            .nodes
-            .get(*id)
-            .map(|n| n.posterior)
-            .unwrap_or(0.0);
+        let posterior = network.nodes.get(*id).map(|n| n.posterior).unwrap_or(0.0);
         risk *= posterior;
     }
     risk

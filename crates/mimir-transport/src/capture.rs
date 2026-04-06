@@ -241,10 +241,7 @@ mod tests {
 
         let errs = log.errors_only();
         assert_eq!(errs.len(), 1);
-        assert_eq!(
-            errs[0].0.operation_name.as_deref(),
-            Some("Err")
-        );
+        assert_eq!(errs[0].0.operation_name.as_deref(), Some("Err"));
     }
 
     #[test]

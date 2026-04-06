@@ -174,16 +174,10 @@ mod tests {
         assert_eq!(classify_entropy(b"aaaa"), EntropyLevel::Low);
 
         // Single bit of entropy → Low.
-        assert_eq!(
-            classify_entropy(b"abababababababab"),
-            EntropyLevel::Low
-        );
+        assert_eq!(classify_entropy(b"abababababababab"), EntropyLevel::Low);
 
         // 2 bits → Medium.
-        assert_eq!(
-            classify_entropy(b"abcdabcdabcdabcd"),
-            EntropyLevel::Medium
-        );
+        assert_eq!(classify_entropy(b"abcdabcdabcdabcd"), EntropyLevel::Medium);
 
         // Uniform 256 symbols → 8 bits → VeryHigh.
         let data: Vec<u8> = (0..=255u8).cycle().take(256 * 16).collect();

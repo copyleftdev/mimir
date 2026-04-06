@@ -1,3 +1,10 @@
+#![allow(
+    clippy::redundant_closure,
+    clippy::needless_range_loop,
+    clippy::excessive_precision,
+    clippy::manual_saturating_arithmetic,
+    clippy::let_and_return
+)]
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use std::collections::BTreeSet;
@@ -79,7 +86,7 @@ pub fn fisher_exact_test(table: &ContingencyTable, alpha: f64) -> FisherResult {
     // The range of possible values for cell `a` given fixed marginals:
     // a_min = max(0, c1 - r2) = max(0, (a+c) - (c+d))
     // a_max = min(r1, c1)     = min(a+b, a+c)
-    let a_min = if c1 > r2 { c1 - r2 } else { 0 };
+    let a_min = c1.saturating_sub(r2);
     let a_max = r1.min(c1);
 
     // Log-probability of a single table configuration.
@@ -204,9 +211,7 @@ fn ln_gamma(x: f64) -> f64 {
     // => ln Gamma(x) = ln(pi) - ln(sin(pi * x)) - ln Gamma(1 - x)
     if x < 0.5 {
         let reflected = ln_gamma(1.0 - x);
-        return std::f64::consts::PI.ln()
-            - (std::f64::consts::PI * x).sin().abs().ln()
-            - reflected;
+        return std::f64::consts::PI.ln() - (std::f64::consts::PI * x).sin().abs().ln() - reflected;
     }
 
     // Lanczos approximation with g = 7.
@@ -366,10 +371,7 @@ mod tests {
 
     #[test]
     fn build_table_non_objects() {
-        let table = build_table_from_responses(
-            &serde_json::json!("hello"),
-            &serde_json::json!(42),
-        );
+        let table = build_table_from_responses(&serde_json::json!("hello"), &serde_json::json!(42));
         assert_eq!(table.total(), 0);
     }
 

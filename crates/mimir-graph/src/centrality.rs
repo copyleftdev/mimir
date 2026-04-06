@@ -91,8 +91,8 @@ pub fn top_central_types(graph: &TypeGraph, k: usize) -> Vec<(String, f64)> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::type_graph::test_helpers::make_test_schema;
     use crate::type_graph::TypeGraph;
+    use crate::type_graph::test_helpers::make_test_schema;
 
     #[test]
     fn test_betweenness_centrality_hub_is_highest() {

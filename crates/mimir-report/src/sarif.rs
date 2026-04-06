@@ -147,9 +147,21 @@ mod tests {
                 max_depth: Some(6),
             },
             findings: vec![
-                make_finding("F-001", Severity::Critical, FindingCategory::IntrospectionEnabled),
-                make_finding("F-002", Severity::High, FindingCategory::MutationWithoutAuth),
-                make_finding("F-003", Severity::Medium, FindingCategory::InformationLeakage),
+                make_finding(
+                    "F-001",
+                    Severity::Critical,
+                    FindingCategory::IntrospectionEnabled,
+                ),
+                make_finding(
+                    "F-002",
+                    Severity::High,
+                    FindingCategory::MutationWithoutAuth,
+                ),
+                make_finding(
+                    "F-003",
+                    Severity::Medium,
+                    FindingCategory::InformationLeakage,
+                ),
             ],
             operations_executed: 250,
             states_discovered: 30,
@@ -168,7 +180,12 @@ mod tests {
     fn sarif_has_schema_reference() {
         let report = make_report();
         let sarif = to_sarif(&report);
-        assert!(sarif["$schema"].as_str().unwrap().contains("sarif-schema-2.1.0"));
+        assert!(
+            sarif["$schema"]
+                .as_str()
+                .unwrap()
+                .contains("sarif-schema-2.1.0")
+        );
     }
 
     #[test]
@@ -200,7 +217,9 @@ mod tests {
     fn sarif_has_rules() {
         let report = make_report();
         let sarif = to_sarif(&report);
-        let rules = sarif["runs"][0]["tool"]["driver"]["rules"].as_array().unwrap();
+        let rules = sarif["runs"][0]["tool"]["driver"]["rules"]
+            .as_array()
+            .unwrap();
         // 3 findings with 3 different categories = 3 rules
         assert_eq!(rules.len(), 3);
     }

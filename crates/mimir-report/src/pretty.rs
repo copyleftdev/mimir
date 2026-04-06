@@ -13,8 +13,10 @@ const BG_RED: &str = "\x1b[41m";
 const MAGENTA: &str = "\x1b[35m";
 const DIM: &str = "\x1b[2m";
 
-const SEPARATOR_EQ: &str = "========================================================================";
-const SEPARATOR_DASH: &str = "------------------------------------------------------------------------";
+const SEPARATOR_EQ: &str =
+    "========================================================================";
+const SEPARATOR_DASH: &str =
+    "------------------------------------------------------------------------";
 
 /// Get the ANSI color code for a severity level.
 fn severity_color(severity: &Severity) -> &'static str {
@@ -45,15 +47,9 @@ pub fn to_pretty(report: &SweepReport) -> String {
     let mut out = String::new();
 
     // Header
-    out.push_str(&format!(
-        "\n{BOLD}{MAGENTA}{SEPARATOR_EQ}{RESET}\n"
-    ));
-    out.push_str(&format!(
-        "{BOLD}{MAGENTA}  mimir Security Report{RESET}\n"
-    ));
-    out.push_str(&format!(
-        "{BOLD}{MAGENTA}{SEPARATOR_EQ}{RESET}\n\n"
-    ));
+    out.push_str(&format!("\n{BOLD}{MAGENTA}{SEPARATOR_EQ}{RESET}\n"));
+    out.push_str(&format!("{BOLD}{MAGENTA}  mimir Security Report{RESET}\n"));
+    out.push_str(&format!("{BOLD}{MAGENTA}{SEPARATOR_EQ}{RESET}\n\n"));
 
     // Target and timing
     out.push_str(&format!("{BOLD}Target:{RESET}    {}\n", report.target));
@@ -74,13 +70,9 @@ pub fn to_pretty(report: &SweepReport) -> String {
     out.push_str(&format!("{BOLD}Seed:{RESET}      {}\n", report.seed));
 
     // Schema stats
-    out.push_str(&format!(
-        "\n{BOLD}{CYAN}{SEPARATOR_DASH}{RESET}\n"
-    ));
+    out.push_str(&format!("\n{BOLD}{CYAN}{SEPARATOR_DASH}{RESET}\n"));
     out.push_str(&format!("{BOLD}{CYAN}  Schema Statistics{RESET}\n"));
-    out.push_str(&format!(
-        "{BOLD}{CYAN}{SEPARATOR_DASH}{RESET}\n\n"
-    ));
+    out.push_str(&format!("{BOLD}{CYAN}{SEPARATOR_DASH}{RESET}\n\n"));
     out.push_str(&format!(
         "  Types: {}  |  Queries: {}  |  Mutations: {}  |  Inputs: {}\n",
         report.schema_stats.type_count,
@@ -93,13 +85,9 @@ pub fn to_pretty(report: &SweepReport) -> String {
     }
 
     // Scan stats
-    out.push_str(&format!(
-        "\n{BOLD}{CYAN}{SEPARATOR_DASH}{RESET}\n"
-    ));
+    out.push_str(&format!("\n{BOLD}{CYAN}{SEPARATOR_DASH}{RESET}\n"));
     out.push_str(&format!("{BOLD}{CYAN}  Exploration Statistics{RESET}\n"));
-    out.push_str(&format!(
-        "{BOLD}{CYAN}{SEPARATOR_DASH}{RESET}\n\n"
-    ));
+    out.push_str(&format!("{BOLD}{CYAN}{SEPARATOR_DASH}{RESET}\n\n"));
     out.push_str(&format!(
         "  Operations executed: {}\n",
         report.operations_executed
@@ -111,13 +99,9 @@ pub fn to_pretty(report: &SweepReport) -> String {
 
     // Severity summary
     let counts = report.count_by_severity();
-    out.push_str(&format!(
-        "\n{BOLD}{CYAN}{SEPARATOR_DASH}{RESET}\n"
-    ));
+    out.push_str(&format!("\n{BOLD}{CYAN}{SEPARATOR_DASH}{RESET}\n"));
     out.push_str(&format!("{BOLD}{CYAN}  Finding Summary{RESET}\n"));
-    out.push_str(&format!(
-        "{BOLD}{CYAN}{SEPARATOR_DASH}{RESET}\n\n"
-    ));
+    out.push_str(&format!("{BOLD}{CYAN}{SEPARATOR_DASH}{RESET}\n\n"));
     out.push_str(&format!(
         "  {} Critical: {}  {} High: {}  {} Medium: {}  {} Low: {}  {} Info: {}\n",
         colored_severity(&Severity::Critical),
@@ -137,9 +121,7 @@ pub fn to_pretty(report: &SweepReport) -> String {
     ));
 
     if report.findings.is_empty() {
-        out.push_str(&format!(
-            "\n  {DIM}No security findings detected.{RESET}\n"
-        ));
+        out.push_str(&format!("\n  {DIM}No security findings detected.{RESET}\n"));
     } else {
         // Group findings by category
         let mut by_category: std::collections::BTreeMap<String, Vec<&mimir_oracle::Finding>> =
@@ -151,13 +133,9 @@ pub fn to_pretty(report: &SweepReport) -> String {
                 .push(finding);
         }
 
-        out.push_str(&format!(
-            "\n{BOLD}{CYAN}{SEPARATOR_DASH}{RESET}\n"
-        ));
+        out.push_str(&format!("\n{BOLD}{CYAN}{SEPARATOR_DASH}{RESET}\n"));
         out.push_str(&format!("{BOLD}{CYAN}  Findings by Category{RESET}\n"));
-        out.push_str(&format!(
-            "{BOLD}{CYAN}{SEPARATOR_DASH}{RESET}\n"
-        ));
+        out.push_str(&format!("{BOLD}{CYAN}{SEPARATOR_DASH}{RESET}\n"));
 
         for (category, findings) in &by_category {
             out.push_str(&format!(
@@ -172,10 +150,7 @@ pub fn to_pretty(report: &SweepReport) -> String {
                     colored_severity(&finding.severity),
                     finding.title,
                 ));
-                out.push_str(&format!(
-                    "    {DIM}ID: {}{RESET}\n",
-                    finding.id
-                ));
+                out.push_str(&format!("    {DIM}ID: {}{RESET}\n", finding.id));
                 out.push_str(&format!("    {}\n", finding.description));
                 out.push_str(&format!(
                     "    {DIM}Operation: {}{RESET}\n",
@@ -190,26 +165,20 @@ pub fn to_pretty(report: &SweepReport) -> String {
                 }
 
                 if let Some(seed) = finding.reproduction.seed {
-                    out.push_str(&format!(
-                        "    {DIM}Seed: {seed}{RESET}\n"
-                    ));
+                    out.push_str(&format!("    {DIM}Seed: {seed}{RESET}\n"));
                 }
             }
         }
     }
 
     // Footer
-    out.push_str(&format!(
-        "\n{BOLD}{MAGENTA}{SEPARATOR_EQ}{RESET}\n"
-    ));
+    out.push_str(&format!("\n{BOLD}{MAGENTA}{SEPARATOR_EQ}{RESET}\n"));
     out.push_str(&format!(
         "{DIM}  Report generated by mimir | seed={} | {}{RESET}\n",
         report.seed,
         report.completed_at.format("%Y-%m-%d %H:%M:%S UTC"),
     ));
-    out.push_str(&format!(
-        "{BOLD}{MAGENTA}{SEPARATOR_EQ}{RESET}\n"
-    ));
+    out.push_str(&format!("{BOLD}{MAGENTA}{SEPARATOR_EQ}{RESET}\n"));
 
     out
 }
@@ -317,9 +286,24 @@ mod tests {
     #[test]
     fn pretty_groups_by_category() {
         let findings = vec![
-            make_finding("F-001", "Finding 1", Severity::High, FindingCategory::IntrospectionEnabled),
-            make_finding("F-002", "Finding 2", Severity::Medium, FindingCategory::IntrospectionEnabled),
-            make_finding("F-003", "Finding 3", Severity::High, FindingCategory::MutationWithoutAuth),
+            make_finding(
+                "F-001",
+                "Finding 1",
+                Severity::High,
+                FindingCategory::IntrospectionEnabled,
+            ),
+            make_finding(
+                "F-002",
+                "Finding 2",
+                Severity::Medium,
+                FindingCategory::IntrospectionEnabled,
+            ),
+            make_finding(
+                "F-003",
+                "Finding 3",
+                Severity::High,
+                FindingCategory::MutationWithoutAuth,
+            ),
         ];
         let report = make_report(findings);
         let output = to_pretty(&report);

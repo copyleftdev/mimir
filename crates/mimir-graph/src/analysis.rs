@@ -52,26 +52,14 @@ pub fn analyze_schema(schema: &Schema) -> SchemaAnalysis {
         .query_type
         .as_deref()
         .and_then(|q| graph.node_index(q))
-        .map(|qi| {
-            dm[qi]
-                .iter()
-                .filter_map(|d| *d)
-                .max()
-                .unwrap_or(0)
-        });
+        .map(|qi| dm[qi].iter().filter_map(|d| *d).max().unwrap_or(0));
 
     // Max depth from mutation root
     let max_depth_from_mutation = schema
         .mutation_type
         .as_deref()
         .and_then(|m| graph.node_index(m))
-        .map(|mi| {
-            dm[mi]
-                .iter()
-                .filter_map(|d| *d)
-                .max()
-                .unwrap_or(0)
-        });
+        .map(|mi| dm[mi].iter().filter_map(|d| *d).max().unwrap_or(0));
 
     // Counts of query and mutation fields
     let query_count = schema.queries().len();
@@ -105,8 +93,14 @@ mod tests {
         assert!(analysis.node_count > 0);
         assert!(analysis.edge_count > 0);
         assert!(analysis.scc_count > 0);
-        assert!(analysis.has_cycles, "Schema has cycles (User <-> Post <-> Comment)");
-        assert!(analysis.largest_scc_size >= 3, "Largest SCC should have at least User, Post, Comment");
+        assert!(
+            analysis.has_cycles,
+            "Schema has cycles (User <-> Post <-> Comment)"
+        );
+        assert!(
+            analysis.largest_scc_size >= 3,
+            "Largest SCC should have at least User, Post, Comment"
+        );
         assert!(!analysis.top_central_types.is_empty());
     }
 
@@ -115,8 +109,14 @@ mod tests {
         let schema = make_test_schema();
         let analysis = analyze_schema(&schema);
 
-        assert_eq!(analysis.query_count, 2, "Query has 'user' and 'posts' fields");
-        assert_eq!(analysis.mutation_count, 1, "Mutation has 'createUser' field");
+        assert_eq!(
+            analysis.query_count, 2,
+            "Query has 'user' and 'posts' fields"
+        );
+        assert_eq!(
+            analysis.mutation_count, 1,
+            "Mutation has 'createUser' field"
+        );
     }
 
     #[test]

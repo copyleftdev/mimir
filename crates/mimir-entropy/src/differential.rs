@@ -188,7 +188,8 @@ mod tests {
 
     #[test]
     fn differential_detects_added_fields() {
-        let authed = json!({"data": {"user": "alice", "email": "alice@example.com", "role": "admin"}});
+        let authed =
+            json!({"data": {"user": "alice", "email": "alice@example.com", "role": "admin"}});
         let unauthed = json!({"data": {"user": "alice"}});
 
         let result = differential_analysis(&authed, &unauthed);
@@ -232,7 +233,11 @@ mod tests {
         assert!(result.only_in_b.is_empty());
         assert_eq!(result.value_diffs.len(), 2);
 
-        let paths: Vec<&str> = result.value_diffs.iter().map(|(p, _, _)| p.as_str()).collect();
+        let paths: Vec<&str> = result
+            .value_diffs
+            .iter()
+            .map(|(p, _, _)| p.as_str())
+            .collect();
         assert!(paths.contains(&"data.balance"));
         assert!(paths.contains(&"data.status"));
     }

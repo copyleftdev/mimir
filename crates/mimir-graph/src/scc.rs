@@ -99,8 +99,7 @@ fn strongconnect(graph: &TypeGraph, root: usize, state: &mut TarjanState) {
                 });
             } else if state.on_stack[w] {
                 // w is on the stack, so it's in the current SCC
-                state.lowlink[v] =
-                    state.lowlink[v].min(state.index[w].unwrap());
+                state.lowlink[v] = state.lowlink[v].min(state.index[w].unwrap());
             }
         } else {
             // All neighbors processed; check if v is a root of an SCC
@@ -123,8 +122,7 @@ fn strongconnect(graph: &TypeGraph, root: usize, state: &mut TarjanState) {
             call_stack.pop();
             if let Some(parent_frame) = call_stack.last() {
                 let parent_v = parent_frame.v;
-                state.lowlink[parent_v] =
-                    state.lowlink[parent_v].min(finished_lowlink);
+                state.lowlink[parent_v] = state.lowlink[parent_v].min(finished_lowlink);
             }
         }
     }
@@ -145,8 +143,8 @@ pub fn largest_scc(graph: &TypeGraph) -> Vec<String> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::type_graph::test_helpers::make_test_schema;
     use crate::type_graph::TypeGraph;
+    use crate::type_graph::test_helpers::make_test_schema;
 
     #[test]
     fn test_scc_finds_cycles() {

@@ -44,10 +44,8 @@ mod tests {
 
     #[test]
     fn display_graphql_error_multiple() {
-        let err = TransportError::GraphqlError(vec![
-            "field not found".into(),
-            "unauthorized".into(),
-        ]);
+        let err =
+            TransportError::GraphqlError(vec!["field not found".into(), "unauthorized".into()]);
         assert_eq!(
             err.to_string(),
             "GraphQL errors: field not found; unauthorized"

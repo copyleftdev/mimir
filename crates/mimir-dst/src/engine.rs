@@ -6,16 +6,16 @@ use serde_json::Value;
 use tracing::{debug, info, warn};
 
 use mimir_entropy::shannon::json_entropy;
-use mimir_gen::generator::{generate_mutation_suite, generate_query, GenConfig};
+use mimir_gen::generator::{GenConfig, generate_mutation_suite, generate_query};
 use mimir_graph::analysis::analyze_schema;
 use mimir_mdp::explorer::compute_reward;
 use mimir_mdp::state::{Action, ApiState};
 use mimir_mdp::strategy::{EpsilonGreedy, ExplorationStrategy, ThompsonSampling, Ucb1};
-use mimir_oracle::{AuthState, PropertyContext, PropertyRegistry};
 use mimir_oracle::Finding;
+use mimir_oracle::{AuthState, PropertyContext, PropertyRegistry};
 use mimir_report::report::{SchemaStats, SweepReport};
-use mimir_schema::types::Schema;
 use mimir_schema::parse_introspection_response;
+use mimir_schema::types::Schema;
 use mimir_transport::GraphqlClient;
 
 use crate::config::{StrategyKind, SweepConfig};
@@ -470,8 +470,8 @@ mod tests {
 
     #[test]
     fn build_schema_stats_works() {
-        use mimir_schema::types::*;
         use indexmap::IndexMap;
+        use mimir_schema::types::*;
 
         let mut types = IndexMap::new();
         types.insert(

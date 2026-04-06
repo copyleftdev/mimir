@@ -130,7 +130,11 @@ mod tests {
     #[test]
     fn json_contains_findings() {
         let findings = vec![
-            make_finding("F-001", Severity::High, FindingCategory::IntrospectionEnabled),
+            make_finding(
+                "F-001",
+                Severity::High,
+                FindingCategory::IntrospectionEnabled,
+            ),
             make_finding("F-002", Severity::Low, FindingCategory::FieldSuggestionLeak),
         ];
         let report = make_report(findings);
@@ -145,8 +149,16 @@ mod tests {
     #[test]
     fn json_has_severity_summary() {
         let findings = vec![
-            make_finding("F-001", Severity::Critical, FindingCategory::IntrospectionEnabled),
-            make_finding("F-002", Severity::High, FindingCategory::MutationWithoutAuth),
+            make_finding(
+                "F-001",
+                Severity::Critical,
+                FindingCategory::IntrospectionEnabled,
+            ),
+            make_finding(
+                "F-002",
+                Severity::High,
+                FindingCategory::MutationWithoutAuth,
+            ),
             make_finding("F-003", Severity::High, FindingCategory::BatchingAbuse),
         ];
         let report = make_report(findings);

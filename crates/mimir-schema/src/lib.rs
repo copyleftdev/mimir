@@ -5,5 +5,5 @@ pub mod introspection;
 pub mod types;
 
 pub use error::SchemaError;
-pub use introspection::{parse_introspection_response, INTROSPECTION_QUERY};
+pub use introspection::{INTROSPECTION_QUERY, parse_introspection_response};
 pub use types::*;

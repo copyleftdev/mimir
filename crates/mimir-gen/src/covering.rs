@@ -164,8 +164,8 @@ fn resolve_levels(schema: &Schema, type_name: &str) -> Vec<Value> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use mimir_schema::types::*;
     use indexmap::IndexMap;
+    use mimir_schema::types::*;
     use serde_json::json;
     use std::collections::HashSet;
 

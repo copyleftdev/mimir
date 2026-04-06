@@ -208,9 +208,7 @@ impl GraphqlClient {
                 error = %e,
                 "response is not valid JSON"
             );
-            TransportError::InvalidResponse(format!(
-                "expected JSON body, got parse error: {e}"
-            ))
+            TransportError::InvalidResponse(format!("expected JSON body, got parse error: {e}"))
         })?;
 
         // Extract data and errors
@@ -249,8 +247,7 @@ impl GraphqlClient {
             .await?;
 
         if !response.errors.is_empty() {
-            let messages: Vec<String> =
-                response.errors.iter().map(|e| e.message.clone()).collect();
+            let messages: Vec<String> = response.errors.iter().map(|e| e.message.clone()).collect();
             return Err(TransportError::GraphqlError(messages));
         }
 
@@ -401,8 +398,8 @@ mod tests {
     /// verifying we get an appropriate error rather than panicking.
     #[tokio::test]
     async fn execute_connection_refused() {
-        let mut client = GraphqlClient::new("http://127.0.0.1:1/graphql")
-            .with_timeout(Duration::from_secs(2));
+        let mut client =
+            GraphqlClient::new("http://127.0.0.1:1/graphql").with_timeout(Duration::from_secs(2));
 
         let result = client.execute("{ __typename }", None, None).await;
         assert!(result.is_err());

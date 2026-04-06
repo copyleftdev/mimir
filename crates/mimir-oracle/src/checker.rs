@@ -1,8 +1,8 @@
 use crate::finding::Finding;
 use crate::properties::{
-    batch_queries_should_be_limited, depth_should_be_limited, errors_should_not_leak_info,
-    introspection_should_be_disabled, mutations_require_auth, no_field_suggestions, PropertyCheck,
-    PropertyContext, PropertyResult,
+    PropertyCheck, PropertyContext, PropertyResult, batch_queries_should_be_limited,
+    depth_should_be_limited, errors_should_not_leak_info, introspection_should_be_disabled,
+    mutations_require_auth, no_field_suggestions,
 };
 
 /// Registry of security properties to evaluate against GraphQL responses.

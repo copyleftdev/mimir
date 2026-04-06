@@ -67,10 +67,7 @@ fn dfs_all_paths(
         let field_name = field_name.clone();
 
         if !visited[neighbor] || neighbor == target {
-            let type_name = graph
-                .node_name(current)
-                .unwrap_or("?")
-                .to_string();
+            let type_name = graph.node_name(current).unwrap_or("?").to_string();
 
             current_path.push((type_name, field_name));
 
@@ -78,7 +75,15 @@ fn dfs_all_paths(
                 visited[neighbor] = true;
             }
 
-            dfs_all_paths(graph, neighbor, target, max_depth, visited, current_path, results);
+            dfs_all_paths(
+                graph,
+                neighbor,
+                target,
+                max_depth,
+                visited,
+                current_path,
+                results,
+            );
 
             if neighbor != target {
                 visited[neighbor] = false;
@@ -93,11 +98,7 @@ fn dfs_all_paths(
 /// Returns a path as a Vec of `(type_name, field_name)` pairs, or `None` if
 /// the target is unreachable. The path represents edges: each entry is the
 /// source type and the field name used to reach the next type.
-pub fn shortest_path(
-    graph: &TypeGraph,
-    from: &str,
-    to: &str,
-) -> Option<Vec<(String, String)>> {
+pub fn shortest_path(graph: &TypeGraph, from: &str, to: &str) -> Option<Vec<(String, String)>> {
     let start = graph.node_index(from)?;
     let end = graph.node_index(to)?;
 
@@ -172,8 +173,8 @@ pub fn distance_matrix(graph: &TypeGraph) -> Vec<Vec<Option<usize>>> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::type_graph::test_helpers::make_test_schema;
     use crate::type_graph::TypeGraph;
+    use crate::type_graph::test_helpers::make_test_schema;
 
     #[test]
     fn test_all_paths_basic() {
@@ -190,10 +191,13 @@ mod tests {
         );
 
         // The direct path Query->User should be among them
-        let has_direct = paths.iter().any(|p| {
-            p.len() == 1 && p[0].0 == "Query" && p[0].1 == "user"
-        });
-        assert!(has_direct, "Should find direct Query->User path via 'user' field");
+        let has_direct = paths
+            .iter()
+            .any(|p| p.len() == 1 && p[0].0 == "Query" && p[0].1 == "user");
+        assert!(
+            has_direct,
+            "Should find direct Query->User path via 'user' field"
+        );
     }
 
     #[test]
@@ -238,7 +242,11 @@ mod tests {
         let path = shortest_path(&graph, "Query", "Comment");
         assert!(path.is_some(), "Should find path from Query to Comment");
         let path = path.unwrap();
-        assert_eq!(path.len(), 2, "Shortest path Query->Comment should be 2 edges");
+        assert_eq!(
+            path.len(),
+            2,
+            "Shortest path Query->Comment should be 2 edges"
+        );
     }
 
     #[test]
@@ -301,6 +309,9 @@ mod tests {
         let ci = graph.node_index("Category").unwrap();
 
         assert!(dm[qi][ci].is_some(), "Query should reach Category");
-        assert!(dm[ci][qi].is_none(), "Category should NOT reach Query (no outgoing edges)");
+        assert!(
+            dm[ci][qi].is_none(),
+            "Category should NOT reach Query (no outgoing edges)"
+        );
     }
 }

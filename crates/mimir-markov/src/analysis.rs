@@ -1,3 +1,10 @@
+#![allow(
+    clippy::redundant_closure,
+    clippy::needless_range_loop,
+    clippy::excessive_precision,
+    clippy::manual_saturating_arithmetic,
+    clippy::let_and_return
+)]
 use serde::{Deserialize, Serialize};
 
 use crate::chain::MarkovChain;
@@ -24,8 +31,8 @@ pub fn analyze_chain(chain: &MarkovChain) -> MarkovAnalysis {
     let ergodic = steady_state::is_ergodic(chain);
 
     // Compute stationary distribution
-    let pi = steady_state::stationary_distribution(chain, 10_000, 1e-10)
-        .unwrap_or_else(|| vec![0.0; n]);
+    let pi =
+        steady_state::stationary_distribution(chain, 10_000, 1e-10).unwrap_or_else(|| vec![0.0; n]);
 
     // Rank states by steady-state probability (descending)
     let mut ranked_states: Vec<(String, f64)> = chain

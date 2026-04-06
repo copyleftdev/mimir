@@ -61,14 +61,8 @@ impl Sprt {
     ///
     /// Panics if `p0 >= p1`, or if either probability is not in (0, 1).
     pub fn new(config: SprtConfig, p0: f64, p1: f64) -> Self {
-        assert!(
-            p0 > 0.0 && p0 < 1.0,
-            "p0 must be in (0, 1), got {p0}"
-        );
-        assert!(
-            p1 > 0.0 && p1 < 1.0,
-            "p1 must be in (0, 1), got {p1}"
-        );
+        assert!(p0 > 0.0 && p0 < 1.0, "p0 must be in (0, 1), got {p0}");
+        assert!(p1 > 0.0 && p1 < 1.0, "p1 must be in (0, 1), got {p1}");
         assert!(p0 < p1, "p0 must be less than p1: {p0} >= {p1}");
 
         let alpha = config.alpha;
@@ -81,12 +75,7 @@ impl Sprt {
 
         debug!(
             p0,
-            p1,
-            upper_bound,
-            lower_bound,
-            alpha,
-            beta,
-            "SPRT initialized"
+            p1, upper_bound, lower_bound, alpha, beta, "SPRT initialized"
         );
 
         Self {
@@ -328,7 +317,7 @@ mod tests {
         let config = SprtConfig {
             min_observations: 1,
             max_observations: 5,
-            alpha: 0.001,   // very strict => wide boundaries
+            alpha: 0.001, // very strict => wide boundaries
             beta: 0.001,
         };
         let mut sprt = Sprt::new(config, 0.05, 0.30);

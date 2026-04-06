@@ -1,3 +1,10 @@
+#![allow(
+    clippy::redundant_closure,
+    clippy::needless_range_loop,
+    clippy::excessive_precision,
+    clippy::manual_saturating_arithmetic,
+    clippy::let_and_return
+)]
 use serde::{Deserialize, Serialize};
 
 /// A discrete Markov chain built from observed state transitions.

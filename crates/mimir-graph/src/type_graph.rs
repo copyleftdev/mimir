@@ -1,5 +1,5 @@
-use mimir_schema::types::{Schema, TypeKind, TypeRef};
 use indexmap::IndexMap;
+use mimir_schema::types::{Schema, TypeKind, TypeRef};
 
 /// A directed graph representation of a GraphQL schema's type relationships.
 #[derive(Debug, Clone)]
@@ -88,8 +88,7 @@ impl TypeGraph {
                     if let Some(arg_type_name) = resolve_inner_name(&arg.input_type) {
                         if !is_builtin(arg_type_name) {
                             if let Some(&tgt_idx) = nodes.get(arg_type_name) {
-                                let edge_label =
-                                    format!("{}.{}", field.name, arg.name);
+                                let edge_label = format!("{}.{}", field.name, arg.name);
                                 adjacency[src_idx].push((tgt_idx, edge_label.clone()));
                                 reverse_adjacency[tgt_idx].push((src_idx, edge_label));
                             }
@@ -194,8 +193,8 @@ mod tests {
 /// Test helpers for building hand-crafted schemas.
 #[cfg(test)]
 pub(crate) mod test_helpers {
-    use mimir_schema::types::*;
     use indexmap::IndexMap;
+    use mimir_schema::types::*;
 
     pub fn make_type_ref(name: &str) -> TypeRef {
         TypeRef {

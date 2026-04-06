@@ -1,5 +1,5 @@
-pub mod type_graph;
-pub mod centrality;
-pub mod scc;
-pub mod paths;
 pub mod analysis;
+pub mod centrality;
+pub mod paths;
+pub mod scc;
+pub mod type_graph;

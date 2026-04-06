@@ -1,5 +1,5 @@
 use mimir_schema::types::{Field, Schema, TypeKind, TypeRef};
-use serde_json::{json, Value};
+use serde_json::{Value, json};
 
 use crate::covering::{mutation_to_factors, pairwise_covering_array};
 
@@ -120,12 +120,7 @@ fn generate_selection_set(
             let mut parts = vec!["__typename".to_string()];
             for possible in &resolved.possible_types {
                 if let Some(type_name) = possible.inner_name() {
-                    let inner = generate_selection_set(
-                        schema,
-                        possible,
-                        depth + 1,
-                        max_depth,
-                    );
+                    let inner = generate_selection_set(schema, possible, depth + 1, max_depth);
                     if !inner.is_empty() {
                         parts.push(format!("... on {type_name} {inner}"));
                     }
@@ -199,8 +194,8 @@ fn capitalize(s: &str) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use mimir_schema::types::*;
     use indexmap::IndexMap;
+    use mimir_schema::types::*;
 
     fn make_test_schema() -> Schema {
         let mut types = IndexMap::new();

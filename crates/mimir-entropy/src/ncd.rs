@@ -1,5 +1,5 @@
-use flate2::write::DeflateEncoder;
 use flate2::Compression;
+use flate2::write::DeflateEncoder;
 use serde_json::Value;
 use std::io::Write;
 
@@ -73,11 +73,7 @@ pub fn find_outliers(baseline: &[u8], responses: &[&[u8]], threshold: f64) -> Ve
         .enumerate()
         .filter_map(|(i, resp)| {
             let d = ncd(baseline, resp);
-            if d > threshold {
-                Some(i)
-            } else {
-                None
-            }
+            if d > threshold { Some(i) } else { None }
         })
         .collect()
 }
@@ -90,10 +86,7 @@ mod tests {
     fn identical_bytes_have_zero_ncd() {
         let data = b"the quick brown fox jumps over the lazy dog";
         let d = ncd(data, data);
-        assert!(
-            d < 0.1,
-            "NCD of identical data should be ~0.0, got {d}"
-        );
+        assert!(d < 0.1, "NCD of identical data should be ~0.0, got {d}");
     }
 
     #[test]
@@ -131,7 +124,10 @@ mod tests {
         let a = serde_json::json!({"user": "alice", "role": "admin", "email": "alice@example.com"});
         let b = serde_json::json!({"status": 500, "error": "internal server error"});
         let d = json_ncd(&a, &b);
-        assert!(d > 0.3, "NCD of different JSON should be significant, got {d}");
+        assert!(
+            d > 0.3,
+            "NCD of different JSON should be significant, got {d}"
+        );
     }
 
     #[test]

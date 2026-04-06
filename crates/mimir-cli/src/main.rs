@@ -6,7 +6,7 @@ use tracing::info;
 use tracing_subscriber::EnvFilter;
 
 use mimir_dst::{OutputFormat, StrategyKind, SweepConfig, SweepEngine};
-use mimir_gen::generator::{generate_mutation_suite, generate_query, GenConfig};
+use mimir_gen::generator::{GenConfig, generate_mutation_suite, generate_query};
 use mimir_graph::analysis::analyze_schema;
 use mimir_report::json_report::to_json;
 use mimir_report::pretty::to_pretty;
@@ -146,31 +146,22 @@ async fn main() -> Result<()> {
 
             let output = match output_format {
                 OutputFormat::Pretty => to_pretty(&report),
-                OutputFormat::Json => {
-                    serde_json::to_string_pretty(&to_json(&report))
-                        .context("failed to serialize JSON report")?
-                }
-                OutputFormat::Sarif => {
-                    serde_json::to_string_pretty(&to_sarif(&report))
-                        .context("failed to serialize SARIF report")?
-                }
+                OutputFormat::Json => serde_json::to_string_pretty(&to_json(&report))
+                    .context("failed to serialize JSON report")?,
+                OutputFormat::Sarif => serde_json::to_string_pretty(&to_sarif(&report))
+                    .context("failed to serialize SARIF report")?,
             };
 
             println!("{output}");
         }
 
         Commands::Introspect { url, format } => {
-            let mut client = GraphqlClient::new(&url)
-                .with_timeout(Duration::from_secs(30));
+            let mut client = GraphqlClient::new(&url).with_timeout(Duration::from_secs(30));
 
             info!(url = %url, "fetching schema via introspection");
-            let json = client
-                .introspect()
-                .await
-                .context("introspection failed")?;
+            let json = client.introspect().await.context("introspection failed")?;
 
-            let schema =
-                parse_introspection_response(&json).context("failed to parse schema")?;
+            let schema = parse_introspection_response(&json).context("failed to parse schema")?;
 
             match format.as_str() {
                 "json" => {
@@ -219,22 +210,13 @@ async fn main() -> Result<()> {
             }
         }
 
-        Commands::Analyze {
-            url,
-            format,
-            top_k,
-        } => {
-            let mut client = GraphqlClient::new(&url)
-                .with_timeout(Duration::from_secs(30));
+        Commands::Analyze { url, format, top_k } => {
+            let mut client = GraphqlClient::new(&url).with_timeout(Duration::from_secs(30));
 
             info!(url = %url, "fetching schema for analysis");
-            let json = client
-                .introspect()
-                .await
-                .context("introspection failed")?;
+            let json = client.introspect().await.context("introspection failed")?;
 
-            let schema =
-                parse_introspection_response(&json).context("failed to parse schema")?;
+            let schema = parse_introspection_response(&json).context("failed to parse schema")?;
 
             let analysis = analyze_schema(&schema);
 
@@ -253,10 +235,7 @@ async fn main() -> Result<()> {
                     println!("SCC count:        {}", analysis.scc_count);
                     println!("Largest SCC:      {} types", analysis.largest_scc_size);
                     if !analysis.largest_scc_types.is_empty() {
-                        println!(
-                            "  Types: {}",
-                            analysis.largest_scc_types.join(", ")
-                        );
+                        println!("  Types: {}", analysis.largest_scc_types.join(", "));
                     }
                     if let Some(d) = analysis.max_depth_from_query {
                         println!("Max depth (query): {d}");
@@ -281,17 +260,12 @@ async fn main() -> Result<()> {
             seed,
             max_depth,
         } => {
-            let mut client = GraphqlClient::new(&url)
-                .with_timeout(Duration::from_secs(30));
+            let mut client = GraphqlClient::new(&url).with_timeout(Duration::from_secs(30));
 
             info!(url = %url, "fetching schema for query generation");
-            let json = client
-                .introspect()
-                .await
-                .context("introspection failed")?;
+            let json = client.introspect().await.context("introspection failed")?;
 
-            let schema =
-                parse_introspection_response(&json).context("failed to parse schema")?;
+            let schema = parse_introspection_response(&json).context("failed to parse schema")?;
 
             let gen_config = GenConfig {
                 max_depth,
@@ -313,7 +287,10 @@ async fn main() -> Result<()> {
 
             let mutation_suite = generate_mutation_suite(&schema, &gen_config);
             if !mutation_suite.is_empty() {
-                println!("# Generated Mutations ({} test cases)", mutation_suite.len());
+                println!(
+                    "# Generated Mutations ({} test cases)",
+                    mutation_suite.len()
+                );
                 println!();
                 for (op_name, query, variables) in &mutation_suite {
                     println!("# Mutation: {op_name}");
@@ -362,9 +339,9 @@ fn parse_output_format(s: &str) -> Result<OutputFormat> {
         "pretty" => Ok(OutputFormat::Pretty),
         "json" => Ok(OutputFormat::Json),
         "sarif" => Ok(OutputFormat::Sarif),
-        other => anyhow::bail!(
-            "unknown output format '{other}'. Valid options: pretty, json, sarif"
-        ),
+        other => {
+            anyhow::bail!("unknown output format '{other}'. Valid options: pretty, json, sarif")
+        }
     }
 }
 

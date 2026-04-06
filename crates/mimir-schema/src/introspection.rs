@@ -1,3 +1,10 @@
+#![allow(
+    clippy::redundant_closure,
+    clippy::needless_range_loop,
+    clippy::excessive_precision,
+    clippy::manual_saturating_arithmetic,
+    clippy::let_and_return
+)]
 //! Standard GraphQL introspection query and response parsing.
 
 use indexmap::IndexMap;
@@ -153,7 +160,11 @@ pub fn parse_introspection_response(json: &Value) -> Result<Schema, SchemaError>
     let directives = schema_val
         .get("directives")
         .and_then(Value::as_array)
-        .map(|arr| arr.iter().map(parse_directive).collect::<Result<Vec<_>, _>>())
+        .map(|arr| {
+            arr.iter()
+                .map(parse_directive)
+                .collect::<Result<Vec<_>, _>>()
+        })
         .transpose()?
         .unwrap_or_default();
 
@@ -252,7 +263,11 @@ fn parse_field(val: &Value) -> Result<Field, SchemaError> {
     let args = val
         .get("args")
         .and_then(Value::as_array)
-        .map(|arr| arr.iter().map(parse_input_value).collect::<Result<Vec<_>, _>>())
+        .map(|arr| {
+            arr.iter()
+                .map(parse_input_value)
+                .collect::<Result<Vec<_>, _>>()
+        })
         .transpose()?
         .unwrap_or_default();
 
@@ -327,28 +342,44 @@ fn parse_full_type(val: &Value) -> Result<FullType, SchemaError> {
     let input_fields = val
         .get("inputFields")
         .and_then(Value::as_array)
-        .map(|arr| arr.iter().map(parse_input_value).collect::<Result<Vec<_>, _>>())
+        .map(|arr| {
+            arr.iter()
+                .map(parse_input_value)
+                .collect::<Result<Vec<_>, _>>()
+        })
         .transpose()?
         .unwrap_or_default();
 
     let interfaces = val
         .get("interfaces")
         .and_then(Value::as_array)
-        .map(|arr| arr.iter().map(parse_type_ref).collect::<Result<Vec<_>, _>>())
+        .map(|arr| {
+            arr.iter()
+                .map(parse_type_ref)
+                .collect::<Result<Vec<_>, _>>()
+        })
         .transpose()?
         .unwrap_or_default();
 
     let enum_values = val
         .get("enumValues")
         .and_then(Value::as_array)
-        .map(|arr| arr.iter().map(parse_enum_value).collect::<Result<Vec<_>, _>>())
+        .map(|arr| {
+            arr.iter()
+                .map(parse_enum_value)
+                .collect::<Result<Vec<_>, _>>()
+        })
         .transpose()?
         .unwrap_or_default();
 
     let possible_types = val
         .get("possibleTypes")
         .and_then(Value::as_array)
-        .map(|arr| arr.iter().map(parse_type_ref).collect::<Result<Vec<_>, _>>())
+        .map(|arr| {
+            arr.iter()
+                .map(parse_type_ref)
+                .collect::<Result<Vec<_>, _>>()
+        })
         .transpose()?
         .unwrap_or_default();
 
@@ -390,7 +421,11 @@ fn parse_directive(val: &Value) -> Result<Directive, SchemaError> {
     let args = val
         .get("args")
         .and_then(Value::as_array)
-        .map(|arr| arr.iter().map(parse_input_value).collect::<Result<Vec<_>, _>>())
+        .map(|arr| {
+            arr.iter()
+                .map(parse_input_value)
+                .collect::<Result<Vec<_>, _>>()
+        })
         .transpose()?
         .unwrap_or_default();
 
@@ -1261,18 +1296,10 @@ mod tests {
         assert_eq!(role.kind, TypeKind::Enum);
         assert_eq!(role.enum_values.len(), 3);
 
-        let admin = role
-            .enum_values
-            .iter()
-            .find(|v| v.name == "ADMIN")
-            .unwrap();
+        let admin = role.enum_values.iter().find(|v| v.name == "ADMIN").unwrap();
         assert!(!admin.is_deprecated);
 
-        let guest = role
-            .enum_values
-            .iter()
-            .find(|v| v.name == "GUEST")
-            .unwrap();
+        let guest = role.enum_values.iter().find(|v| v.name == "GUEST").unwrap();
         assert!(guest.is_deprecated);
     }
 

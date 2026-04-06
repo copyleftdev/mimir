@@ -56,10 +56,7 @@ impl Shrinker {
         let mut steps = 0;
 
         // Strategy 1: Binary prefix search
-        info!(
-            original_length,
-            "Starting binary prefix shrink"
-        );
+        info!(original_length, "Starting binary prefix shrink");
         current = self.binary_prefix_shrink(&current, replay, &mut steps);
         debug!(length = current.len(), steps, "After binary prefix");
 
@@ -92,10 +89,7 @@ impl Shrinker {
 
         info!(
             original_length,
-            shrunk_length,
-            steps,
-            reduction_ratio,
-            "Shrinking complete"
+            shrunk_length, steps, reduction_ratio, "Shrinking complete"
         );
 
         ShrinkResult {
@@ -133,10 +127,7 @@ impl Shrinker {
         let second_half = sequence.slice(mid, sequence.len());
         *steps += 1;
         if replay(&second_half) {
-            debug!(
-                len = second_half.len(),
-                "Second half reproduces, recursing"
-            );
+            debug!(len = second_half.len(), "Second half reproduces, recursing");
             return self.binary_prefix_shrink(&second_half, replay, steps);
         }
 
@@ -210,11 +201,7 @@ impl Shrinker {
                 *steps += 1;
 
                 if replay(&candidate) {
-                    debug!(
-                        start,
-                        window_size,
-                        "Contiguous window reproduces"
-                    );
+                    debug!(start, window_size, "Contiguous window reproduces");
                     // Recurse — maybe we can shrink the window further
                     return self.contiguous_window_shrink(&candidate, replay, steps);
                 }
@@ -269,10 +256,7 @@ mod tests {
         let result = shrinker.shrink(&seq, &replay);
 
         assert_eq!(result.shrunk_length, 1);
-        assert_eq!(
-            result.shrunk_sequence.actions[0].operation_name,
-            "critical"
-        );
+        assert_eq!(result.shrunk_sequence.actions[0].operation_name, "critical");
     }
 
     #[test]
@@ -358,12 +342,8 @@ mod tests {
     fn test_reduction_ratio_in_range() {
         let seq = make_sequence(&["a", "b", "c", "d", "e"]);
 
-        let replay: ReplayFn = Box::new(|candidate| {
-            candidate
-                .actions
-                .iter()
-                .any(|a| a.operation_name == "c")
-        });
+        let replay: ReplayFn =
+            Box::new(|candidate| candidate.actions.iter().any(|a| a.operation_name == "c"));
 
         let shrinker = Shrinker::new(1000);
         let result = shrinker.shrink(&seq, &replay);

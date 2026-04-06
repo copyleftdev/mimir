@@ -1,3 +1,10 @@
+#![allow(
+    clippy::redundant_closure,
+    clippy::needless_range_loop,
+    clippy::excessive_precision,
+    clippy::manual_saturating_arithmetic,
+    clippy::let_and_return
+)]
 use crate::chain::MarkovChain;
 
 /// Compute the stationary distribution using the power iteration method.
@@ -204,10 +211,7 @@ mod tests {
 
         let pi = stationary_distribution(&chain, 1000, 1e-10).unwrap();
         let sum: f64 = pi.iter().sum();
-        assert!(
-            (sum - 1.0).abs() < 1e-8,
-            "Sum should be 1.0, got {sum}"
-        );
+        assert!((sum - 1.0).abs() < 1e-8, "Sum should be 1.0, got {sum}");
     }
 
     #[test]

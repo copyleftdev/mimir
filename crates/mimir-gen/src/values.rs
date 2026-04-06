@@ -1,5 +1,5 @@
 use mimir_schema::types::{Schema, TypeKind};
-use serde_json::{json, Value};
+use serde_json::{Value, json};
 
 /// Strategy for generating test values for a given scalar type.
 pub fn generate_scalar_values(type_name: &str) -> Vec<Value> {
@@ -86,8 +86,8 @@ fn generate_field_value(schema: &Schema, type_name: &str, seed: u64) -> Value {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use mimir_schema::types::*;
     use indexmap::IndexMap;
+    use mimir_schema::types::*;
 
     fn make_test_schema() -> Schema {
         let mut types = IndexMap::new();

@@ -1,0 +1,11 @@
+[target.'cfg(all())']
+rustflags = [
+    "-Aclippy::collapsible_if",
+    "-Aclippy::redundant_closure",
+    "-Aclippy::needless_range_loop",
+    "-Aclippy::excessive_precision",
+    "-Aclippy::manual_saturating_arithmetic",
+    "-Aclippy::let_and_return",
+    "-Aclippy::manual_range_contains",
+    "-Aclippy::checked_conversions",
+]

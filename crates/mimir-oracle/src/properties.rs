@@ -1,9 +1,7 @@
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 
-use crate::finding::{
-    Finding, FindingCategory, ReproductionInfo, Severity,
-};
+use crate::finding::{Finding, FindingCategory, ReproductionInfo, Severity};
 
 /// The type signature for a property check function.
 pub type PropertyCheck = fn(&PropertyContext) -> PropertyResult;
@@ -57,8 +55,8 @@ pub enum PropertyResult {
 ///
 /// Detects if an introspection query returns a successful `__schema` response.
 pub fn introspection_should_be_disabled(ctx: &PropertyContext) -> PropertyResult {
-    let is_introspection_query = ctx.request_query.contains("__schema")
-        || ctx.request_query.contains("__type");
+    let is_introspection_query =
+        ctx.request_query.contains("__schema") || ctx.request_query.contains("__type");
 
     if !is_introspection_query {
         return PropertyResult::Skip;
@@ -84,9 +82,7 @@ pub fn introspection_should_be_disabled(ctx: &PropertyContext) -> PropertyResult
                           This exposes the entire API surface to attackers and should \
                           be disabled in production environments."
                 .to_string(),
-            evidence: vec![
-                "Introspection query returned __schema or __type data".to_string(),
-            ],
+            evidence: vec!["Introspection query returned __schema or __type data".to_string()],
             reproduction: ReproductionInfo {
                 seed: None,
                 operation: ctx.request_query.clone(),
@@ -115,10 +111,7 @@ pub fn mutations_require_auth(ctx: &PropertyContext) -> PropertyResult {
     }
 
     // Check if the mutation succeeded (has data and no errors, or 200 status).
-    let has_data = ctx
-        .response
-        .get("data")
-        .is_some_and(|d| !d.is_null());
+    let has_data = ctx.response.get("data").is_some_and(|d| !d.is_null());
     let has_errors = ctx
         .response
         .get("errors")
@@ -336,10 +329,7 @@ pub fn depth_should_be_limited(ctx: &PropertyContext) -> PropertyResult {
     }
 
     // If a deep query succeeded, the server may not enforce depth limits.
-    let has_data = ctx
-        .response
-        .get("data")
-        .is_some_and(|d| !d.is_null());
+    let has_data = ctx.response.get("data").is_some_and(|d| !d.is_null());
     let has_errors = ctx
         .response
         .get("errors")
@@ -479,10 +469,7 @@ mod tests {
     #[test]
     fn mutations_skip_for_queries() {
         let ctx = make_context(|_| {});
-        assert!(matches!(
-            mutations_require_auth(&ctx),
-            PropertyResult::Skip
-        ));
+        assert!(matches!(mutations_require_auth(&ctx), PropertyResult::Skip));
     }
 
     #[test]
@@ -491,10 +478,7 @@ mod tests {
             ctx.request_query = "mutation { createUser(name: \"x\") { id } }".to_string();
             ctx.auth_state = AuthState::ValidUser;
         });
-        assert!(matches!(
-            mutations_require_auth(&ctx),
-            PropertyResult::Skip
-        ));
+        assert!(matches!(mutations_require_auth(&ctx), PropertyResult::Skip));
     }
 
     #[test]
@@ -519,10 +503,7 @@ mod tests {
             ctx.response = json!({"data": null, "errors": [{"message": "Unauthorized"}]});
             ctx.status_code = 200;
         });
-        assert!(matches!(
-            mutations_require_auth(&ctx),
-            PropertyResult::Pass
-        ));
+        assert!(matches!(mutations_require_auth(&ctx), PropertyResult::Pass));
     }
 
     // --- errors_should_not_leak_info ---
@@ -539,9 +520,8 @@ mod tests {
     #[test]
     fn errors_fail_with_stack_trace() {
         let ctx = make_context(|ctx| {
-            ctx.response_errors = vec![
-                "Error: at /app/node_modules/graphql/execution.js:123".to_string(),
-            ];
+            ctx.response_errors =
+                vec!["Error: at /app/node_modules/graphql/execution.js:123".to_string()];
         });
         assert!(matches!(
             errors_should_not_leak_info(&ctx),
@@ -578,10 +558,7 @@ mod tests {
     #[test]
     fn suggestions_skip_when_no_errors() {
         let ctx = make_context(|_| {});
-        assert!(matches!(
-            no_field_suggestions(&ctx),
-            PropertyResult::Skip
-        ));
+        assert!(matches!(no_field_suggestions(&ctx), PropertyResult::Skip));
     }
 
     #[test]
@@ -602,10 +579,7 @@ mod tests {
         let ctx = make_context(|ctx| {
             ctx.response_errors = vec!["Cannot query field \"naem\" on type \"User\"".to_string()];
         });
-        assert!(matches!(
-            no_field_suggestions(&ctx),
-            PropertyResult::Pass
-        ));
+        assert!(matches!(no_field_suggestions(&ctx), PropertyResult::Pass));
     }
 
     // --- batch_queries_should_be_limited ---
@@ -622,8 +596,7 @@ mod tests {
     #[test]
     fn batch_fail_when_batch_succeeds() {
         let ctx = make_context(|ctx| {
-            ctx.request_query =
-                "[{\"query\": \"{ a }\"}, {\"query\": \"{ b }\"}]".to_string();
+            ctx.request_query = "[{\"query\": \"{ a }\"}, {\"query\": \"{ b }\"}]".to_string();
             ctx.response = json!([{"data": {"a": 1}}, {"data": {"b": 2}}]);
             ctx.status_code = 200;
         });
@@ -636,8 +609,7 @@ mod tests {
     #[test]
     fn batch_pass_when_batch_rejected() {
         let ctx = make_context(|ctx| {
-            ctx.request_query =
-                "[{\"query\": \"{ a }\"}, {\"query\": \"{ b }\"}]".to_string();
+            ctx.request_query = "[{\"query\": \"{ a }\"}, {\"query\": \"{ b }\"}]".to_string();
             ctx.response = json!({"errors": [{"message": "Batching is not allowed"}]});
             ctx.status_code = 400;
         });

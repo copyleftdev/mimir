@@ -292,10 +292,7 @@ mod tests {
 
         // With epsilon=1.0, all actions should get some selections
         for (i, &count) in counts.iter().enumerate() {
-            assert!(
-                count > 0,
-                "action {i} was never selected with epsilon=1.0"
-            );
+            assert!(count > 0, "action {i} was never selected with epsilon=1.0");
         }
     }
 
